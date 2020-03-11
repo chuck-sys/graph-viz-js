@@ -35,6 +35,10 @@ function mouseReleased() {
 	m_bodies.push(new Node(m_engine.world, mouseX, mouseY));
 }
 
+function mouseWheel(evt) {
+	view.s += evt.delta / 100;
+}
+
 function tick(delta) {
 	Engine.update(m_engine, delta);
 }

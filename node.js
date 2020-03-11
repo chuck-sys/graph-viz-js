@@ -4,6 +4,7 @@ class Node {
 	constructor(world, x, y) {
 		this.m_body = Bodies.circle(x, y, NODE_RADIUS);
 		this.m_selected = false;
+		this.m_data = {};
 
 		World.add(world, this.m_body);
 	}
