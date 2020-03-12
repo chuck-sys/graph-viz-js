@@ -42,4 +42,12 @@ class Node {
 	deselect() {
 		this.m_selected = false;
 	}
+
+	/**
+	 * Return true if coordinate is within the body
+	 */
+	isCollide(mx, my) {
+		const pos = this.m_body.position;
+		return Math.pow(mx - pos.x, 2) + Math.pow(my - pos.y, 2) <= NODE_RADIUS * NODE_RADIUS
+	}
 }
