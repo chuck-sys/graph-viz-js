@@ -6,17 +6,28 @@ var Engine, World, Bodies;
 var delta = 0;
 var running = true;
 
+/** We have a few state strings:
+ * - "normal" for normal operations
+ * - "dragging" for moving the view
+ * - "makeEdges" for connecting nodes with edges
+ */
+var m_state = "normal";
 var m_engine;
-var m_bodies = [];
+var m_nodes = [];
+var m_edges = [];
 
 var view = {
 	x: 0, y: 0, s: 1
 }
 
 var dragging = {
-	x: 0, y: 0, inState: false,
+	x: 0, y: 0,
 	vx: 0, vy: 0
 };
+
+var makeEdges = {
+	anchorNode: null
+}
 
 var selected = null;
 
@@ -37,7 +48,7 @@ function draw() {
 	push();
 	// Place (0, 0) at the center of the screen
 	translate(WIDTH / 2, HEIGHT / 2);
-	for (let b of m_bodies) {
+	for (let b of m_nodes) {
 		b.draw(view);
 	}
 	pop();
@@ -46,23 +57,28 @@ function draw() {
 }
 
 function mouseReleased() {
-	if (dragging.inState) {
-		dragging.inState = false;
+	if (m_state === 'dragging') {
+		m_state = 'normal';
 	} else {
 		let mX = (mouseX - WIDTH / 2) / view.s - view.x;
 		let mY = (mouseY - HEIGHT / 2) / view.s - view.y;
 		let n = new Node(m_engine.world, mX, mY);
+
 		if (selected !== null) {
 			selected.deselect();
 		}
+
 		selected = n;
-		m_bodies.push(n);
+		m_nodes.push(n);
 	}
 }
 
 function mouseDragged() {
-	if (!dragging.inState) {
-		dragging.inState = true;
+	if (m_state === 'normal') {
+		// Check to see if we are dragging and starting at a node
+		// If so we start making an edge
+		// If not we are simply dragging the view around
+		m_state = 'dragging';
 		dragging.x = mouseX;
 		dragging.y = mouseY;
 		dragging.vx = view.x;
