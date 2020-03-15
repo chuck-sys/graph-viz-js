@@ -1,7 +1,7 @@
 const WIDTH = 1280;
 const HEIGHT = 720;
 
-var Engine, World, Bodies;
+var Engine, World, Bodies, Constraint;
 
 var delta = 0;
 var running = true;
@@ -26,7 +26,8 @@ var dragging = {
 };
 
 var makeEdges = {
-	anchorNode: null
+	anchorNode: null,
+	targetNode: null
 }
 
 var selected = null;
@@ -37,6 +38,7 @@ function setup() {
 	Engine = Matter.Engine;
 	World = Matter.World;
 	Bodies = Matter.Bodies;
+	Constraint = Matter.Constraint;
 
 	m_engine = Engine.create();
 	m_engine.world.gravity.y = 0;
@@ -45,9 +47,39 @@ function setup() {
 function draw() {
 	background('black');
 
+	// Draw the drag line
+	if (m_state === 'makeEdges') {
+		let color = makeEdges.targetNode === null ? 'red' : 'green';
+		push();
+		stroke(color);
+		strokeWeight(1);
+		translate(WIDTH / 2, HEIGHT / 2);
+		scale(view.s);
+		translate(view.x, view.y);
+
+		if (makeEdges.targetNode === null) {
+			let mx = (mouseX - WIDTH / 2) / view.s - view.x;
+			let my = (mouseY - HEIGHT / 2) / view.s - view.y;
+			line(makeEdges.anchorNode.m_body.position.x,
+				makeEdges.anchorNode.m_body.position.y,
+				mx, my);
+		} else {
+			line(makeEdges.anchorNode.m_body.position.x,
+				makeEdges.anchorNode.m_body.position.y,
+				makeEdges.targetNode.m_body.position.x,
+				makeEdges.targetNode.m_body.position.y);
+		}
+		pop();
+	}
+
 	push();
 	// Place (0, 0) at the center of the screen
 	translate(WIDTH / 2, HEIGHT / 2);
+	// Add the edges
+	for (let e of m_edges) {
+		e.draw(view);
+	}
+	// Add the nodes
 	for (let b of m_nodes) {
 		b.draw(view);
 	}
@@ -61,13 +93,15 @@ function mouseReleased() {
 		m_state = 'normal';
 	} else if (m_state === 'makeEdges') {
 		m_state = 'normal';
-		let n = isCoordCollide(mouseX, mouseY);
-		if (n === null || n === makeEdges.anchorNode) {
+		if (makeEdges.targetNode === null || makeEdges.anchorNode === null || makeEdges.anchorNode === makeEdges.targetNode) {
 			// We haven't connected the nodes or we are connecting our own
 			// nodes so we don't do anything
 		} else {
 			// Make the edge!
+			m_edges.push(new Edge(m_engine.world, makeEdges.anchorNode, makeEdges.targetNode));
 		}
+		makeEdges.anchorNode = null;
+		makeEdges.targetNode = null;
 	} else {
 		let mX = (mouseX - WIDTH / 2) / view.s - view.x;
 		let mY = (mouseY - HEIGHT / 2) / view.s - view.y;
@@ -97,6 +131,8 @@ function mouseDragged() {
 		} else {
 			m_state = 'makeEdges';
 		}
+	} else if (m_state === 'makeEdges') {
+		makeEdges.targetNode = isCoordCollide(mouseX, mouseY);
 	} else {
 		let mX = (mouseX - dragging.x) / view.s;
 		let mY = (mouseY - dragging.y) / view.s;
