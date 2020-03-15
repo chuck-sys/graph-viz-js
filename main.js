@@ -58,8 +58,7 @@ function draw() {
 		translate(view.x, view.y);
 
 		if (makeEdges.targetNode === null) {
-			let mx = (mouseX - WIDTH / 2) / view.s - view.x;
-			let my = (mouseY - HEIGHT / 2) / view.s - view.y;
+			let [mx, my] = screenToWorldCoords(mouseX, mouseY, view);
 			line(makeEdges.anchorNode.m_body.position.x,
 				makeEdges.anchorNode.m_body.position.y,
 				mx, my);
@@ -103,8 +102,7 @@ function mouseReleased() {
 		makeEdges.anchorNode = null;
 		makeEdges.targetNode = null;
 	} else {
-		let mX = (mouseX - WIDTH / 2) / view.s - view.x;
-		let mY = (mouseY - HEIGHT / 2) / view.s - view.y;
+		let [mX, mY] = screenToWorldCoords(mouseX, mouseY, view);
 		let n = new Node(m_engine.world, mX, mY);
 
 		if (selected !== null) {
@@ -147,8 +145,7 @@ function mouseDragged() {
  * with, or null if there isn't.
  */
 function isCoordCollide(mx, my) {
-	mx = (mx - WIDTH / 2) / view.s - view.x;
-	my = (my - HEIGHT / 2) / view.s - view.y;
+	[mx, my] = screenToWorldCoords(mx, my, view);
 	for (let n of m_nodes) {
 		if (n.isCollide(mx, my)) {
 			return n;
