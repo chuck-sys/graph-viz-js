@@ -43,6 +43,10 @@ class Node {
 		this.m_selected = false;
 	}
 
+	select() {
+		this.m_selected = true;
+	}
+
 	/**
 	 * Return true if coordinate is within the body
 	 */

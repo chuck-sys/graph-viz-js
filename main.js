@@ -102,15 +102,18 @@ function mouseReleased() {
 		makeEdges.anchorNode = null;
 		makeEdges.targetNode = null;
 	} else {
-		let [mX, mY] = screenToWorldCoords(mouseX, mouseY, view);
-		let n = new Node(m_engine.world, mX, mY);
-
-		if (selected !== null) {
-			selected.deselect();
+		let n = isCoordCollide(mouseX, mouseY);
+		if (n === null) {
+			// We click on nothing, so create a new node
+			let [mX, mY] = screenToWorldCoords(mouseX, mouseY, view);
+			n = new Node(m_engine.world, mX, mY);
+			// ... and then select that node
+			selectNode(n);
+			m_nodes.push(n);
+		} else {
+			// We click on a node, so select it
+			selectNode(n);
 		}
-
-		selected = n;
-		m_nodes.push(n);
 	}
 }
 
@@ -162,4 +165,12 @@ function mouseWheel(evt) {
 
 function tick(delta) {
 	Engine.update(m_engine, delta);
+}
+
+function selectNode(n) {
+	if (selected !== null) {
+		selected.deselect();
+	}
+	selected = n;
+	n.select();
 }
