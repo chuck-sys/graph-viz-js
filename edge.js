@@ -16,7 +16,7 @@ class Edge {
 		scale(v.s);
 		translate(v.x, v.y);
 		stroke('white');
-		strokeWeight(1);
+		strokeWeight(3);
 		line(this.m_b1.position.x,
 			this.m_b1.position.y,
 			this.m_b2.position.x,

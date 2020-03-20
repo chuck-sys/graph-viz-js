@@ -1,6 +1,3 @@
-const WIDTH = 1280;
-const HEIGHT = 720;
-
 var Engine, World, Bodies, Constraint;
 
 var delta = 0;
@@ -33,7 +30,7 @@ var makeEdges = {
 var selected = null;
 
 function setup() {
-	createCanvas(WIDTH, HEIGHT);
+	createCanvas(windowWidth * 0.7, windowHeight);
 
 	Engine = Matter.Engine;
 	World = Matter.World;
@@ -52,8 +49,8 @@ function draw() {
 		let color = makeEdges.targetNode === null ? 'red' : 'green';
 		push();
 		stroke(color);
-		strokeWeight(1);
-		translate(WIDTH / 2, HEIGHT / 2);
+		strokeWeight(3);
+		translate(width / 2, height / 2);
 		scale(view.s);
 		translate(view.x, view.y);
 
@@ -73,7 +70,7 @@ function draw() {
 
 	push();
 	// Place (0, 0) at the center of the screen
-	translate(WIDTH / 2, HEIGHT / 2);
+	translate(width / 2, height / 2);
 	// Add the edges
 	for (let e of m_edges) {
 		e.draw(view);
