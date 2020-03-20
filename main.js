@@ -30,7 +30,8 @@ var makeEdges = {
 var selected = null;
 
 function setup() {
-	createCanvas(windowWidth * 0.7, windowHeight);
+	let canvas = createCanvas(windowWidth * 0.7, windowHeight);
+	canvas.parent('canvasParent');
 
 	Engine = Matter.Engine;
 	World = Matter.World;
