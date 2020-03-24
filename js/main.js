@@ -29,8 +29,6 @@ var makeEdges = {
 
 var selected = null;
 
-var redraw = true;
-
 function setup() {
 	let canvas = createCanvas(windowWidth * 0.7, windowHeight);
 	canvas.parent('canvasParent');
@@ -47,8 +45,6 @@ function setup() {
 }
 
 function draw() {
-	if (!redraw && !m_engine.world.isModified) return;
-
 	background('black');
 
 	// Draw the drag line
@@ -94,11 +90,9 @@ function draw() {
 
 	tick(deltaTime);
 
-	redraw = false;
 }
 
 function mouseReleased() {
-	redraw = true;
 	if (m_state === 'dragging') {
 		m_state = 'normal';
 	} else if (m_state === 'makeEdges') {
@@ -132,7 +126,6 @@ function mouseReleased() {
 }
 
 function mouseDragged() {
-	redraw = true;
 	if (m_state === 'normal') {
 		// Check to see if we are dragging and starting at a node
 		// If so we start making an edge
@@ -173,7 +166,6 @@ function isCoordCollide(mx, my) {
 }
 
 function mouseWheel(evt) {
-	redraw = true;
 	view.s += evt.delta / 100;
 
 	return false;
