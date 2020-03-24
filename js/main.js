@@ -29,6 +29,8 @@ var makeEdges = {
 
 var selected = null;
 
+var redraw = true;
+
 function setup() {
 	let canvas = createCanvas(windowWidth * 0.7, windowHeight);
 	canvas.parent('canvasParent');
@@ -40,9 +42,13 @@ function setup() {
 
 	m_engine = Engine.create();
 	m_engine.world.gravity.y = 0;
+
+	textSize(EM);
 }
 
 function draw() {
+	if (!redraw && !m_engine.world.isModified) return;
+
 	background('black');
 
 	// Draw the drag line
@@ -80,12 +86,19 @@ function draw() {
 	for (let b of m_nodes) {
 		b.draw(view);
 	}
+	// Display the infobox on top of everything else
+	if (selected !== null) {
+		selected.box.draw(view);
+	}
 	pop();
 
 	tick(deltaTime);
+
+	redraw = false;
 }
 
 function mouseReleased() {
+	redraw = true;
 	if (m_state === 'dragging') {
 		m_state = 'normal';
 	} else if (m_state === 'makeEdges') {
@@ -100,6 +113,9 @@ function mouseReleased() {
 		makeEdges.anchorNode = null;
 		makeEdges.targetNode = null;
 	} else {
+		// Check to see if we are clicking outside of the playing area
+		if (mouseX > width || mouseY > height) return;
+
 		let n = isCoordCollide(mouseX, mouseY);
 		if (n === null) {
 			// We click on nothing, so create a new node
@@ -116,6 +132,7 @@ function mouseReleased() {
 }
 
 function mouseDragged() {
+	redraw = true;
 	if (m_state === 'normal') {
 		// Check to see if we are dragging and starting at a node
 		// If so we start making an edge
@@ -156,6 +173,7 @@ function isCoordCollide(mx, my) {
 }
 
 function mouseWheel(evt) {
+	redraw = true;
 	view.s += evt.delta / 100;
 
 	return false;
@@ -167,8 +185,8 @@ function tick(delta) {
 
 function selectNode(n) {
 	if (selected !== null) {
-		selected.deselect();
+		selected.node.deselect();
 	}
-	selected = n;
+	selected = {node: n, box: new NodeInfobox(n)};
 	n.select();
 }

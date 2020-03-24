@@ -4,19 +4,35 @@
     <meta charset="UTF-8">
     <title>Graph Visualizer</title>
 
+    <script type="text/javascript">
+      // This is where we put our constants
+      const EM = 20;
+    </script>
+
     <script type="text/javascript" src="lib/p5.min.js"></script>
     <script type="text/javascript" src="lib/matter.min.js"></script>
-    <script type="text/javascript" src="util.js"></script>
-    <script type="text/javascript" src="node.js"></script>
-    <script type="text/javascript" src="edge.js"></script>
-    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript" src="js/util.js"></script>
+    <script type="text/javascript" src="js/node.js"></script>
+    <script type="text/javascript" src="js/node_infobox.js"></script>
+    <script type="text/javascript" src="js/edge.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
 
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="css/main.css">
   </head>
   <body>
-    <div id="canvasParent"></div>
-    <div id="controls">
-      <input type="text">
+    <div class="container">
+      <div id="canvasParent"></div>
+      <div id="sidepanel">
+        <p>
+        <strong>Instructions for use</strong>
+        </p>
+        <p>
+        Click anywhere to create a node. Drag to change your view. Scroll your
+        mouse wheel to zoom in/out. Click on a node to select the node
+        (highlighted in green) which opens up a dialogue box. Use the buttons
+        inside the dialogue box to edit node data.
+        </p>
+      </div>
     </div>
   </body>
 </html>
