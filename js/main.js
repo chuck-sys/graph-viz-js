@@ -1,4 +1,4 @@
-var Engine, World, Bodies, Constraint;
+var Engine, World, Bodies, Constraint, Composite;
 
 var delta = 0;
 var running = true;
@@ -37,6 +37,7 @@ function setup() {
 	World = Matter.World;
 	Bodies = Matter.Bodies;
 	Constraint = Matter.Constraint;
+	Composite = Matter.Composite;
 
 	m_engine = Engine.create();
 	m_engine.world.gravity.y = 0;
@@ -91,7 +92,6 @@ function draw() {
 	}
 
 	tick(deltaTime);
-
 }
 
 function mouseReleased() {
@@ -168,6 +168,8 @@ function isCoordCollide(mx, my) {
 }
 
 function mouseWheel(evt) {
+	// Check to see if we are clicking outside of the playing area
+	if (mouseX > width || mouseY > height) return;
 	view.s += evt.delta / 100;
 
 	return false;
