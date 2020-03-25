@@ -15,9 +15,6 @@ class NodeInfobox {
 		const nodepos = this.node.m_body.position;
 
 		push();
-		// scale(v.s);
-		// translate(nodepos.x + v.x, nodepos.y + v.y);		// Normalize to node
-		// translate(NODE_RADIUS, -NODE_RADIUS - INFOBOX_HEIGHT);	// Go to LH corner of display
 
 		fill(20, INFOBOX_ALPHA);
 		strokeWeight(1);
@@ -44,5 +41,16 @@ class NodeInfobox {
 		}
 
 		pop();
+	}
+
+	handleDblClick(x, y, fn_inputBox, fn_cancel) {
+		if (!this.isHit(x, y)) return;
+	}
+
+	/**
+	 * Return true if (x, y) is within the infobox.
+	 */
+	isHit(x, y) {
+		return x < INFOBOX_WIDTH && y < INFOBOX_HEIGHT;
 	}
 }

@@ -28,6 +28,7 @@ var makeEdges = {
 }
 
 var selected = null;
+var dialogBox = null;
 
 function setup() {
 	let canvas = createCanvas(windowWidth * 0.7, windowHeight);
@@ -91,7 +92,32 @@ function draw() {
 		selected.box.draw(view);
 	}
 
+	// Display dialog box if needed
+	if (dialogBox !== null) {
+		dialogBox.draw();
+	}
+
 	tick(deltaTime);
+}
+
+function doubleClicked() {
+	if (selected !== null) {
+		// On the off chance that we clicked on something important, we need to
+		// populate the dialogBox variable with an actual dialog box.
+		selected.box.handleDblClick(mouseX, mouseY, (box) => {
+			// Function called when we create the box
+			dialogBox = box;
+		}, (box) => {
+			// Function called when we cancel the box (by pressing escape)
+			dialogBox = null;
+		});
+	}
+}
+
+function keyPressed() {
+	if (dialogBox !== null) {
+		dialogBox.handleInput(keyCode);
+	}
 }
 
 function mouseReleased() {
