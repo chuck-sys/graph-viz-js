@@ -1,5 +1,6 @@
 const INFOBOX_WIDTH = 22 * EM;
 const INFOBOX_HEIGHT = 10.5 * EM;
+const INFOBOX_ALPHA = 200;
 
 /**
  * This element is used for displaying only and does not need any physics
@@ -14,20 +15,20 @@ class NodeInfobox {
 		const nodepos = this.node.m_body.position;
 
 		push();
-		scale(v.s);
-		translate(nodepos.x + v.x, nodepos.y + v.y);		// Normalize to node
-		translate(NODE_RADIUS, -NODE_RADIUS - INFOBOX_HEIGHT);	// Go to LH corner of display
+		// scale(v.s);
+		// translate(nodepos.x + v.x, nodepos.y + v.y);		// Normalize to node
+		// translate(NODE_RADIUS, -NODE_RADIUS - INFOBOX_HEIGHT);	// Go to LH corner of display
 
-		fill(20);
+		fill(20, INFOBOX_ALPHA);
 		strokeWeight(1);
-		stroke('white');
+		stroke(255, 255, 255, INFOBOX_ALPHA);
 		rect(0, 0, INFOBOX_WIDTH, INFOBOX_HEIGHT);
 		line(0, 2 * EM, 22 * EM, 2 * EM);
 
 		// Draw the name
 		textAlign(LEFT, TOP);
 		const name = truncate(this.node.getName(), INFOBOX_WIDTH - EM);
-		fill('white');
+		fill(255, 255, 255, INFOBOX_ALPHA);
 		noStroke();
 		textStyle(BOLD);
 		text(name, 0.5 * EM, 0.5 * EM);

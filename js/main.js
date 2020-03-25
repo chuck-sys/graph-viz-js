@@ -82,11 +82,13 @@ function draw() {
 	for (let b of m_nodes) {
 		b.draw(view);
 	}
-	// Display the infobox on top of everything else
+	pop();
+
+	// Display the infobox on top of everything else, at the top-left hand
+	// corner of the screen, no scaling.
 	if (selected !== null) {
 		selected.box.draw(view);
 	}
-	pop();
 
 	tick(deltaTime);
 
