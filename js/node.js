@@ -1,4 +1,4 @@
-const NODE_RADIUS = 50;
+const NODE_RADIUS = 25;
 
 class Node {
 	constructor(world, x, y) {
@@ -28,7 +28,7 @@ class Node {
 		push();
 		scale(v.s);
 		translate(pos.x + v.x, pos.y + v.y);
-		circle(0, 0, NODE_RADIUS);
+		circle(0, 0, NODE_RADIUS * 2);
 
 		if (this.m_data.name) {
 			fill('white');

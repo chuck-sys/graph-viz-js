@@ -49,6 +49,15 @@ function setup() {
 function draw() {
 	background('black');
 
+	push();
+	// Place (0, 0) at the center of the screen
+	translate(width / 2, height / 2);
+	// Add the edges
+	for (let e of m_edges) {
+		e.draw(view);
+	}
+	pop();
+
 	// Draw the drag line
 	if (m_state === 'makeEdges') {
 		let color = makeEdges.targetNode === null ? 'red' : 'green';
@@ -65,6 +74,10 @@ function draw() {
 				makeEdges.anchorNode.m_body.position.y,
 				mx, my);
 		} else {
+			if (findEdge(makeEdges.targetNode.m_body, makeEdges.anchorNode.m_body) !== null) {
+				// Make it explicit that we are deleting an edge constraint
+				stroke(20);
+			}
 			line(makeEdges.anchorNode.m_body.position.x,
 				makeEdges.anchorNode.m_body.position.y,
 				makeEdges.targetNode.m_body.position.x,
@@ -76,10 +89,6 @@ function draw() {
 	push();
 	// Place (0, 0) at the center of the screen
 	translate(width / 2, height / 2);
-	// Add the edges
-	for (let e of m_edges) {
-		e.draw(view);
-	}
 	// Add the nodes
 	for (let b of m_nodes) {
 		b.draw(view);
@@ -130,6 +139,11 @@ function keyPressed() {
 		// ... and then select that node
 		selectNode(n);
 		m_nodes.push(n);
+	} else if (keyCode === DELETE && selected !== null) {
+		// If we are selecting a node, delete it
+		World.remove(m_engine.world, selected.node.m_body);		// Remove from physics engine
+		m_nodes.splice(m_nodes.indexOf(selected.node), 1);		// Remove from array (a ref)
+		deselectNode();											// Deselect it, thus removing it entirely
 	}
 }
 
@@ -140,7 +154,17 @@ function mouseReleased() {
 		m_state = 'normal';
 		if (makeEdges.targetNode === null || makeEdges.anchorNode === null || makeEdges.anchorNode === makeEdges.targetNode) {
 			// We haven't connected the nodes or we are connecting our own
-			// nodes so we don't do anything
+			// nodes so we don't do anything and exit early
+			makeEdges.anchorNode = null;
+			makeEdges.targetNode = null;
+			return;
+		}
+
+		let e = findEdge(makeEdges.targetNode.m_body, makeEdges.anchorNode.m_body);
+		if (e !== null) {
+			// The edge already exists. Delete it.
+			World.remove(m_engine.world, e.m_constraint);
+			m_edges.splice(m_edges.indexOf(e), 1);
 		} else {
 			// Make the edge!
 			m_edges.push(new Edge(m_engine.world, makeEdges.anchorNode, makeEdges.targetNode));
@@ -221,4 +245,18 @@ function selectNode(n) {
 	deselectNode();
 	selected = {node: n, box: new NodeInfobox(n)};
 	n.select();
+}
+
+/**
+ * Checks to see if we already have an edge between bodyA and bodyB. Returns
+ * the edge if there is an edge already, and null if there isn't.
+ */
+function findEdge(bodyA, bodyB) {
+	for (const e of m_edges) {
+		if (e.equals(bodyA, bodyB)) {
+			return e;
+		}
+	}
+
+	return null;
 }

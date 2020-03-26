@@ -23,4 +23,9 @@ class Edge {
 			this.m_b2.position.y);
 		pop();
 	}
+
+	equals(bodyA, bodyB) {
+		return (this.m_b1 === bodyA && this.m_b2 === bodyB) ||
+			(this.m_b1 === bodyB && this.m_b2 === bodyA);
+	}
 }
