@@ -117,6 +117,19 @@ function doubleClicked() {
 function keyPressed() {
 	if (dialogBox !== null) {
 		dialogBox.handleInput(keyCode);
+		return;
+	}
+
+	if (keyCode === 65) {
+		// Check to see if we are clicking outside of the playing area
+		if (mouseX > width || mouseY > height) return;
+
+		// Create the node
+		let [mX, mY] = screenToWorldCoords(mouseX, mouseY, view);
+		n = new Node(m_engine.world, mX, mY);
+		// ... and then select that node
+		selectNode(n);
+		m_nodes.push(n);
 	}
 }
 
@@ -135,20 +148,12 @@ function mouseReleased() {
 		makeEdges.anchorNode = null;
 		makeEdges.targetNode = null;
 	} else {
-		// Check to see if we are clicking outside of the playing area
-		if (mouseX > width || mouseY > height) return;
-
+		// Click on a node to select it
 		let n = isCoordCollide(mouseX, mouseY);
-		if (n === null) {
-			// We click on nothing, so create a new node
-			let [mX, mY] = screenToWorldCoords(mouseX, mouseY, view);
-			n = new Node(m_engine.world, mX, mY);
-			// ... and then select that node
+		if (n !== null) {
 			selectNode(n);
-			m_nodes.push(n);
-		} else {
-			// We click on a node, so select it
-			selectNode(n);
+		} else if (selected !== null && !selected.box.isHit(mouseX, mouseY)) {
+			deselectNode();
 		}
 	}
 }
@@ -205,10 +210,15 @@ function tick(delta) {
 	Engine.update(m_engine, delta);
 }
 
-function selectNode(n) {
+function deselectNode() {
 	if (selected !== null) {
 		selected.node.deselect();
+		selected = null;
 	}
+}
+
+function selectNode(n) {
+	deselectNode();
 	selected = {node: n, box: new NodeInfobox(n)};
 	n.select();
 }

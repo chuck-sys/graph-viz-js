@@ -45,6 +45,29 @@ class NodeInfobox {
 
 	handleDblClick(x, y, fn_inputBox, fn_cancel) {
 		if (!this.isHit(x, y)) return;
+
+		// Check name hit
+		let box = null;
+		if (y < 2 * EM) {
+			box = new InputBox("Name", this.node.m_data.name, (s) => this.node.m_data.name = s, fn_cancel);
+		} else {
+			const i = Math.floor((y - 2 * EM) / (1.5 * EM));
+			const attrs = this.node.otherAttrs();
+			const keys = Object.keys(attrs);
+			const vals = Object.values(attrs);
+			if (i < keys.length) {
+				// Check to see if we are changing the key or the value
+				if (x < 9 * EM) {
+					box = new InputBox("Change the key?", keys[i], (s) => {
+						this.node.m_data[s] = vals[i];
+						delete this.node.m_data[keys[i]];
+					}, fn_cancel);
+				} else {
+					box = new InputBox(keys[i], vals[i], (s) => this.node.m_data[keys[i]] = s, fn_cancel);
+				}
+			}
+		}
+		fn_inputBox(box);
 	}
 
 	/**

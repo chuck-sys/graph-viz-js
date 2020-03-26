@@ -3,10 +3,10 @@
  * Has a callback function that gets called when the user is done with it.
  */
 class InputBox {
-	constructor(prmpt, okcb, cancelcb) {
+	constructor(prmpt, hint, okcb, cancelcb) {
 		this._input = "";
 		this._focus = true;
-		this._prmpt = prmpt;
+		this._prmpt = prmpt + " ( " + hint + " )";
 		this._okcb = okcb;
 		this._badcb = cancelcb;
 	}
@@ -15,6 +15,23 @@ class InputBox {
 	 * Called every frame you draw the box
 	 */
 	draw() {
+		// Darken everything
+		fill(20, 200);
+		noStroke();
+		rect(0, 0, width, height);
+
+		rectMode(CENTER);
+		textAlign(RIGHT, TOP)
+
+		fill(20);
+		rect(width / 2, height / 2, INFOBOX_WIDTH, 3.5 * EM);
+		fill('white');
+		textAlign(RIGHT, BOTTOM);
+		text(this._prmpt, width / 2, height / 2);
+		textAlign(CENTER, TOP);
+		text(this._input, width / 2, height / 2);
+
+		rectMode(CORNER);
 	}
 
 	/**
@@ -24,5 +41,17 @@ class InputBox {
 	 * escape key is to cancel everything.
 	 */
 	handleInput(key) {
+		if (key === ESCAPE) {
+			this._badcb();
+		} else if (key === ENTER) {
+			this._okcb(this._input);
+			this._badcb();				// Close everything afterwards
+		} else if (key === BACKSPACE) {
+			this._input = this._input.substring(0, this._input.length - 1);
+		} else if (key >= 0x20) {
+			this._input += String.fromCharCode(key);
+		}
+
+		// We don't recognize any other keys
 	}
 }
