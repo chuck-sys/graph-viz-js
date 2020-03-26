@@ -49,7 +49,12 @@ class InputBox {
 		} else if (key === BACKSPACE) {
 			this._input = this._input.substring(0, this._input.length - 1);
 		} else if (key >= 0x20) {
-			this._input += String.fromCharCode(key);
+			if (key >= 65 && key <= 90 && !keyIsDown(SHIFT)) {
+				// If you didn't press shift, turn it to lowercase
+				this._input += String.fromCharCode(key).toLowerCase();
+			} else {
+				this._input += String.fromCharCode(key);
+			}
 		}
 
 		// We don't recognize any other keys
