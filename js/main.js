@@ -110,7 +110,7 @@ function draw() {
 }
 
 function doubleClicked() {
-	if (selected !== null) {
+	if (selected !== null && dialogBox === null) {
 		// On the off chance that we clicked on something important, we need to
 		// populate the dialogBox variable with an actual dialog box.
 		selected.box.handleDblClick(mouseX, mouseY, (box) => {
@@ -148,6 +148,10 @@ function keyPressed() {
 }
 
 function mouseReleased() {
+	if (dialogBox !== null) {
+		return;
+	}
+
 	if (m_state === 'dragging') {
 		m_state = 'normal';
 	} else if (m_state === 'makeEdges') {
@@ -183,6 +187,10 @@ function mouseReleased() {
 }
 
 function mouseDragged() {
+	if (dialogBox !== null) {
+		return;
+	}
+
 	if (m_state === 'normal') {
 		// Check to see if we are dragging and starting at a node
 		// If so we start making an edge
