@@ -129,6 +129,12 @@ function keyPressed() {
 		return;
 	}
 
+	if (selected !== null) {
+		if (selected.box.handleInput(keyCode)) {
+			return;
+		}
+	}
+
 	if (keyCode === 65) {
 		// Check to see if we are clicking outside of the playing area
 		if (mouseX > width || mouseY > height) return;

@@ -79,6 +79,22 @@ class NodeInfobox {
 		pop();
 	}
 
+	handleInput(key) {
+		if (key === DELETE) {
+			const i = Math.floor((mouseY - 2 * EM) / (1.5 * EM));
+			const attrs = this.node.otherAttrs();
+			const keys = Object.keys(attrs);
+
+			if (i < keys.length && i >= 0) {
+				delete this.node.m_data[keys[i]];
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
 	handleDblClick(x, y, fn_inputBox, fn_cancel) {
 		if (!this.isHit(x, y)) return;
 
@@ -101,6 +117,9 @@ class NodeInfobox {
 				} else {
 					box = new InputBox(keys[i], vals[i], (s) => this.node.m_data[keys[i]] = s, fn_cancel);
 				}
+			} else {
+				// Else, we add it as a new attribute
+				box = new InputBox("Add new key", '???', (s) => this.node.m_data[s] = '', fn_cancel);
 			}
 		}
 		fn_inputBox(box);
