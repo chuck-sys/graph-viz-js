@@ -13,12 +13,17 @@ class NodeInfobox {
 
 	draw(v) {
 		const nodepos = this.node.m_body.position;
+		const attrs = this.node.otherAttrs();
+		const keys = Object.keys(attrs);
+		const i = Math.floor((mouseY - 2 * EM) / (1.5 * EM));
+		const mouseInside = this.isHit(mouseX, mouseY);
 
 		push();
 
 		fill(20, INFOBOX_ALPHA);
 		strokeWeight(1);
 		stroke(255, 255, 255, INFOBOX_ALPHA);
+		// Draw the infobox background
 		rect(0, 0, INFOBOX_WIDTH, INFOBOX_HEIGHT);
 		line(0, 2 * EM, 22 * EM, 2 * EM);
 
@@ -31,13 +36,44 @@ class NodeInfobox {
 		text(name, 0.5 * EM, 0.5 * EM);
 
 		// Populate attributes below, if any
-		const attrs = this.node.otherAttrs();
 		let baseY = 2 * EM;
 		textStyle(NORMAL);
-		for (const k of Object.keys(attrs)) {
+		for (const k of keys) {
 			text(truncate('-' + k, 8 * EM), 0.5 * EM, 0.5 * EM + baseY);
 			text(truncate(attrs[k], 12 * EM), 9 * EM, 0.5 * EM + baseY);
+
+			if (mouseInside && i < keys.length && i >= 0) {
+				noFill();
+				fill(255, 255, 255, INFOBOX_ALPHA);
+				noStroke();
+			}
 			baseY += 1.5 * EM;
+		}
+
+		if (mouseInside && i < keys.length && i >= 0) {
+			// If we mouse over attributes, highlight the attribute and add
+			// helpful text
+			const y = 2 * EM + i * 1.5 * EM;
+			noFill();
+			stroke('red');
+			rect(0, y, INFOBOX_WIDTH, 1.5 * EM);
+			textAlign(LEFT, CENTER);
+			fill('red');
+			noStroke();
+			text('remove attr [delete], edit attr [dblClick]', INFOBOX_WIDTH, y + 0.75 * EM);
+		}
+		if (mouseInside && i >= keys.length) {
+			// If we mouse over the blank space below the attributes, highlight
+			// the space and add helpful text
+			const y = 2 * EM + 1.5 * EM * keys.length;
+			const h = INFOBOX_HEIGHT - y;
+			noFill();
+			stroke('green');
+			rect(0, y, INFOBOX_WIDTH, h);
+			textAlign(CENTER, CENTER);
+			fill('green');
+			noStroke();
+			text('add attribute', INFOBOX_WIDTH / 2, y + h / 2);
 		}
 
 		pop();
