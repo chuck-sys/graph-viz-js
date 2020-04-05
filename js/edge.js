@@ -2,6 +2,8 @@ class Edge {
 	constructor(world, body1, body2) {
 		this.m_b1 = body1.m_body;
 		this.m_b2 = body2.m_body;
+		this.m_n1 = body1;
+		this.m_n2 = body2;
 		let config = {
 			bodyA: this.m_b1,
 			bodyB: this.m_b2
