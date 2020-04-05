@@ -27,3 +27,20 @@ function truncate(str, w) {
 	truncCache.set([str, w].toString(), trunc);
 	return trunc;
 }
+
+/**
+ * Have a user download a file using link href. A bit hacky but what can you do
+ * if you don't have a server?
+ */
+function download(filename, text) {
+	var element = document.createElement('a');
+	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+	element.setAttribute('download', filename);
+
+	element.style.display = 'none';
+	document.body.appendChild(element);
+
+	element.click();
+
+	document.body.removeChild(element);
+}

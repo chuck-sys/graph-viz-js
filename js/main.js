@@ -44,6 +44,19 @@ function setup() {
 	m_engine.world.gravity.y = 0;
 
 	textSize(EM);
+
+	let saveToDisk = document.findElementById("save-to-disk-bt");
+	let saveToBrowser = document.findElementById("save-to-browser-bt");
+	let loadFromFile = document.findElementById("load-from-file-bt");
+
+	saveToDisk.addEventListener('click', () => {
+	};
+
+	saveToBrowser.addEventListener('click', () => {
+	};
+
+	loadFromFile.addEventListener('click', () => {
+	};
 }
 
 function draw() {

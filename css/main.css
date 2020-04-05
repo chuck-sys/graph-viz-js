@@ -10,6 +10,17 @@ body {
 	justify-content: flex-start;
 }
 
+.btn {
+	font-size: 0.7em;
+	padding: 0.7em;
+	margin: 0.7em;
+
+	border: 1px solid #666;
+	border-radius: 0.5em;
+	background-color: #666;
+	color: white;
+}
+
 #canvasParent {
 }
 
