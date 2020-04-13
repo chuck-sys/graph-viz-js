@@ -45,9 +45,10 @@ function setup() {
 
 	textSize(EM);
 
-	let saveToDisk = document.getElementById("save-to-disk-bt");
-	let saveToBrowser = document.getElementById("save-to-browser-bt");
-	let loadFromFile = document.getElementById("load-from-file-bt");
+	let saveToDisk = document.getElementById('save-to-disk-bt');
+	let saveToBrowser = document.getElementById('save-to-browser-bt');
+	let loadFromFile = document.getElementById('load-from-file-bt');
+	let autoSave = document.getElementById('auto-save');
 
 	// Load from browser by default
 	const s = localStorage.getItem('data');
@@ -79,6 +80,13 @@ function setup() {
 			[m_nodes, m_edges, view] = deserializeFile(m_engine.world, JSON.parse(text));
 		});
 	});
+
+	// Setup autosave
+	setInterval(() => {
+		if (autoSave.checked) {
+			saveToBrowser.click();
+		}
+	}, AUTOSAVE_INTERVAL);
 }
 
 function draw() {

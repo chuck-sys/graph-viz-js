@@ -7,6 +7,7 @@
     <script type="text/javascript">
       // This is where we put our constants
       const EM = 20;
+      const AUTOSAVE_INTERVAL = 60 * 1000;
     </script>
 
     <script type="text/javascript" src="lib/p5.min.js"></script>
@@ -42,6 +43,9 @@
         <br>
         <label for="load-from-file-bt" class="btn">Load from file</label>
         <input style="display: none" id="load-from-file-bt" type="file" name="load-from-file-bt" />
+
+        <input type="checkbox" id="auto-save" name="auto-save" />
+        <label for="auto-save">Auto-Save (per minute)</label>
       </div>
     </div>
   </body>
