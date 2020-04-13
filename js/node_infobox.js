@@ -80,7 +80,7 @@ class NodeInfobox {
 	}
 
 	handleInput(key) {
-		if (key === DELETE) {
+		if (key === DELETE && this.isHit(mouseX, mouseY)) {
 			const i = Math.floor((mouseY - 2 * EM) / (1.5 * EM));
 			const attrs = this.node.otherAttrs();
 			const keys = Object.keys(attrs);
