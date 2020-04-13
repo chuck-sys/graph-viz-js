@@ -49,6 +49,8 @@ function setup() {
 	let saveToBrowser = document.getElementById('save-to-browser-bt');
 	let loadFromFile = document.getElementById('load-from-file-bt');
 	let autoSave = document.getElementById('auto-save');
+	let autoSaveLbl = document.getElementById('auto-save-lbl');
+	let clearGraph = document.getElementById('clear-bt');
 
 	// Load from browser by default
 	const s = localStorage.getItem('data');
@@ -63,10 +65,12 @@ function setup() {
 
 	saveToBrowser.addEventListener('click', () => {
 		const obj = serializeWorld(m_nodes, m_edges, view);
+		const now = new Date(Date.now());
 		localStorage.setItem('data', JSON.stringify(obj));
 
 		saveToBrowser.innerHTML = 'Saved!';
 		saveToBrowser.classList.add('flash');
+		autoSaveLbl.innerHTML = 'Auto-Save (last saved ' + now.toTimeString() + ')';
 
 		setTimeout(() => {
 			saveToBrowser.innerHTML = 'Save to browser (no download)';
@@ -79,6 +83,12 @@ function setup() {
 		readFile(file, text => {
 			[m_nodes, m_edges, view] = deserializeFile(m_engine.world, JSON.parse(text));
 		});
+	});
+
+	clearGraph.addEventListener('click', () => {
+		World.clear(m_engine.world, false, true);
+		m_nodes = [];
+		m_edges = [];
 	});
 
 	// Setup autosave
