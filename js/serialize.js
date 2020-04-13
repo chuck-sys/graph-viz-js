@@ -48,8 +48,10 @@ function deserializeFile(world, obj) {
 	}
 
 	for (let e of obj.edges) {
-		let o = new Edge(world, nodes[e.nodeA], nodes[e.nodeB]);
-		edges.push(o);
+		if (nodes.hasOwnProperty(e.nodeA) && nodes.hasOwnProperty(e.nodeB)) {
+			let o = new Edge(world, nodes[e.nodeA], nodes[e.nodeB]);
+			edges.push(o);
+		}
 	}
 
 	return [Object.values(nodes), edges, view];

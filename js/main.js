@@ -202,6 +202,14 @@ function keyPressed() {
 		// If we are selecting a node, delete it
 		World.remove(m_engine.world, selected.node.m_body);		// Remove from physics engine
 		m_nodes.splice(m_nodes.indexOf(selected.node), 1);		// Remove from array (a ref)
+		// Also delete all edges themselves that are connected
+		for (let i = 0; i < m_edges.length; ++i) {
+			if (selected.node.m_body === m_edges[i].m_b1 || selected.node.m_body === m_edges[i].m_b2) {
+				World.remove(m_engine.world, m_edges[i].m_constraint);
+				m_edges.splice(i, 1);
+				--i;
+			}
+		}
 		deselectNode();											// Deselect it, thus removing it entirely
 	}
 }
