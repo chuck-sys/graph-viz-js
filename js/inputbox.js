@@ -47,7 +47,12 @@ class InputBox {
 			this._okcb(this._input);
 			this._badcb();				// Close everything afterwards
 		} else if (key === BACKSPACE) {
-			this._input = this._input.substring(0, this._input.length - 1);
+			if (!keyIsDown(CONTROL)) {
+				this._input = this._input.substring(0, this._input.length - 1);
+			} else {
+				// c-backspace deletes a full word
+				this._input = this._input.substring(0, this._input.lastIndexOf(' '));
+			}
 		} else if (key >= 0x20) {
 			if (key >= 65 && key <= 90 && !keyIsDown(SHIFT)) {
 				// If you didn't press shift, turn it to lowercase
