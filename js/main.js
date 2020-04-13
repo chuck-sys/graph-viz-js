@@ -45,18 +45,40 @@ function setup() {
 
 	textSize(EM);
 
-	let saveToDisk = document.findElementById("save-to-disk-bt");
-	let saveToBrowser = document.findElementById("save-to-browser-bt");
-	let loadFromFile = document.findElementById("load-from-file-bt");
+	let saveToDisk = document.getElementById("save-to-disk-bt");
+	let saveToBrowser = document.getElementById("save-to-browser-bt");
+	let loadFromFile = document.getElementById("load-from-file-bt");
+
+	// Load from browser by default
+	const s = localStorage.getItem('data');
+	if (s !== null) {
+		[m_nodes, m_edges, view] = deserializeFile(m_engine.world, JSON.parse(s));
+	}
 
 	saveToDisk.addEventListener('click', () => {
-	};
+		const s = JSON.stringify(serializeWorld(m_nodes, m_edges, view));
+		download('graph.json', s);
+	});
 
 	saveToBrowser.addEventListener('click', () => {
-	};
+		const obj = serializeWorld(m_nodes, m_edges, view);
+		localStorage.setItem('data', JSON.stringify(obj));
 
-	loadFromFile.addEventListener('click', () => {
-	};
+		saveToBrowser.innerHTML = 'Saved!';
+		saveToBrowser.classList.add('flash');
+
+		setTimeout(() => {
+			saveToBrowser.innerHTML = 'Save to browser (no download)';
+			saveToBrowser.classList.remove('flash');
+		}, 2000);
+	});
+
+	loadFromFile.addEventListener('change', evt => {
+		const file = evt.target.files[0];
+		readFile(file, text => {
+			[m_nodes, m_edges, view] = deserializeFile(m_engine.world, JSON.parse(text));
+		});
+	});
 }
 
 function draw() {

@@ -44,3 +44,17 @@ function download(filename, text) {
 
 	document.body.removeChild(element);
 }
+
+/**
+ * Read a file and when we read finish reading it, call the callback function
+ * with the contents of the file.
+ */
+function readFile(file, cb) {
+	const reader = new FileReader();
+	reader.readAsText(file, 'UTF-8');
+
+	reader.onload = evt => {
+		const content = evt.target.result;
+		cb(content);
+	};
+}

@@ -21,6 +21,11 @@ body {
 	color: white;
 }
 
+.flash {
+	transition: all 0.5s;
+	background-color: green;
+}
+
 #canvasParent {
 }
 
