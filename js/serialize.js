@@ -48,7 +48,7 @@ function deserializeFile(world, obj) {
 	}
 
 	for (let e of obj.edges) {
-		let o = new Edge(world, nodes[e.nodeA].m_body, nodes[e.nodeB].m_body);
+		let o = new Edge(world, nodes[e.nodeA], nodes[e.nodeB]);
 		edges.push(o);
 	}
 
