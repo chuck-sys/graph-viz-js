@@ -21,7 +21,7 @@ class InputBox {
 		rect(0, 0, width, height);
 
 		rectMode(CENTER);
-		textAlign(RIGHT, TOP)
+		textAlign(RIGHT, TOP);
 
 		fill(20);
 		rect(width / 2, height / 2, INFOBOX_WIDTH, 3.5 * EM);
