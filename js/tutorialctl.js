@@ -1,3 +1,9 @@
+const TUTORIAL = {
+	'add_node': [
+		'Press "A" anywhere on the screen to add a node!'
+	]
+};
+
 /**
  * An object to keep track of the tutorials that a user has gone through. Takes
  * from the attribute `tutorial` from `localStorage`.
@@ -14,6 +20,8 @@ class TutorialController {
 	constructor(msgokcb, installmsg) {
 		this._msgokcb = msgokcb;
 		this._install = installmsg;
+
+		this.populate();
 	}
 
 	/**
@@ -28,7 +36,7 @@ class TutorialController {
 			return;
 		}
 
-		// TODO: Actually add tutorials
+		this._install(new MsgBox(TUTORIAL[name], this._msgokcb));
 
 		this.bypass(name);
 	}

@@ -30,6 +30,11 @@ var makeEdges = {
 var selected = null;
 var dialogBox = null;
 
+var m_tutorialctl = new TutorialController(
+	() => dialogBox = null,
+	d => dialogBox = d
+);
+
 function setup() {
 	let canvas = createCanvas(windowWidth * 0.7, windowHeight);
 	canvas.parent('canvasParent');
@@ -97,6 +102,9 @@ function setup() {
 			saveToBrowser.click();
 		}
 	}, AUTOSAVE_INTERVAL);
+
+	// Trigger initial tutorial
+	m_tutorialctl.trigger('add_node');
 }
 
 function draw() {

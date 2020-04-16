@@ -60,7 +60,7 @@ class NodeInfobox {
 			textAlign(LEFT, CENTER);
 			fill('red');
 			noStroke();
-			text('remove attr [delete], edit attr [dblClick]', INFOBOX_WIDTH, y + 0.75 * EM);
+			text('remove attr [delete], edit attr [double click]', INFOBOX_WIDTH, y + 0.75 * EM);
 		}
 		if (mouseInside && i >= keys.length) {
 			// If we mouse over the blank space below the attributes, highlight
@@ -73,7 +73,7 @@ class NodeInfobox {
 			textAlign(CENTER, CENTER);
 			fill('green');
 			noStroke();
-			text('add attribute', INFOBOX_WIDTH / 2, y + h / 2);
+			text('add attribute [double click]', INFOBOX_WIDTH / 2, y + h / 2);
 		}
 
 		pop();
