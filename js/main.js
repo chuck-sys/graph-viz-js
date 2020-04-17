@@ -218,14 +218,22 @@ function keyPressed() {
 		World.remove(m_engine.world, selected.node.m_body);		// Remove from physics engine
 		m_nodes.splice(m_nodes.indexOf(selected.node), 1);		// Remove from array (a ref)
 		// Also delete all edges themselves that are connected
+		let yeet = false;
 		for (let i = 0; i < m_edges.length; ++i) {
 			if (selected.node.m_body === m_edges[i].m_b1 || selected.node.m_body === m_edges[i].m_b2) {
 				World.remove(m_engine.world, m_edges[i].m_constraint);
 				m_edges.splice(i, 1);
 				--i;
+				yeet = true;
 			}
 		}
 		deselectNode();											// Deselect it, thus removing it entirely
+
+		// If there is an edge attached to this node that we have deleted,
+		// trigger the edge deletion tutorial
+		if (yeet) {
+			m_tutorialctl.trigger('delete_edge');
+		}
 	}
 }
 
@@ -251,6 +259,11 @@ function mouseReleased() {
 			// The edge already exists. Delete it.
 			World.remove(m_engine.world, e.m_constraint);
 			m_edges.splice(m_edges.indexOf(e), 1);
+
+			// Bypass the edge deletion tutorial if necessary
+			if (!m_tutorialctl.hasBeenTriggered('delete_edge')) {
+				m_tutorialctl.bypass('delete_edge');
+			}
 		} else {
 			// Make the edge!
 			m_edges.push(new Edge(m_engine.world, makeEdges.anchorNode, makeEdges.targetNode));
