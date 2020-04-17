@@ -4,7 +4,7 @@ class Node {
 	constructor(world, x, y) {
 		this.m_body = Bodies.circle(x, y, NODE_RADIUS);
 		this.m_selected = true;
-		this.m_data = {name: 'Name Here'};
+		this.m_data = {name: '[double click to edit]'};
 
 		World.add(world, this.m_body);
 	}
