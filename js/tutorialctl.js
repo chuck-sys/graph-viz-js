@@ -1,6 +1,17 @@
 const TUTORIAL = {
 	'add_node': [
-		'Press "A" anywhere on the screen to add a node!'
+		'Press "A" anywhere on the screen to add a node!',
+		'Join them with an edge by clicking and dragging from one',
+		'node to another.'
+	],
+	'scrolling': [
+		'It looks like you have added quite a few edges.',
+		'Click and drag to move the viewing space.',
+		'Scroll up or down to zoom in or out.'
+	],
+	'delete_edge': [
+		'Another way to delete an edge is similar to how you create them.',
+		'Just click and drag a node with an existing edge to delete it!'
 	]
 };
 

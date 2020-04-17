@@ -206,6 +206,13 @@ function keyPressed() {
 		// ... and then select that node
 		selectNode(n);
 		m_nodes.push(n);
+
+		// If we have added more than 15 nodes on screen at once, trigger the
+		// scrolling tutorial (of course, we bypass it if we already know how
+		// to do that).
+		if (m_nodes.length >= 15) {
+			m_tutorialctl.trigger('scrolling');
+		}
 	} else if (keyCode === DELETE && selected !== null) {
 		// If we are selecting a node, delete it
 		World.remove(m_engine.world, selected.node.m_body);		// Remove from physics engine
@@ -309,6 +316,11 @@ function mouseWheel(evt) {
 	// Check to see if we are clicking outside of the playing area
 	if (mouseX > width || mouseY > height) return;
 	view.s += evt.delta / 100;
+
+	// If we haven't bypassed it already, bypass
+	if (!m_tutorialctl.hasBeenTriggered('scrolling')) {
+		m_tutorialctl.bypass('scrolling');
+	}
 
 	return false;
 }
