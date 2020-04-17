@@ -326,6 +326,11 @@ function isCoordCollide(mx, my) {
 }
 
 function mouseWheel(evt) {
+	// No need to scroll within a dialog box
+	if (dialogBox !== null) {
+		return;
+	}
+
 	// Check to see if we are clicking outside of the playing area
 	if (mouseX > width || mouseY > height) return;
 	view.s += evt.delta / 100;
