@@ -19,13 +19,14 @@ class MsgBox {
 		textAlign(CENTER, TOP);
 
 		// padding: 1em
+		const boxHeight = (this._lines.length * 1.5 + 2) * EM;
 		fill(20);
-		rect(width / 2, height / 2, this._maxWidthLine + 2 * EM, (this._lines.length + 2) * EM);
+		rect(width / 2, height / 2, this._maxWidthLine + 2 * EM, boxHeight);
 
 		fill('white');
 		textAlign(CENTER, BOTTOM);
 		for (let i = 0; i < this._lines.length; ++i) {
-			text(this._lines[i].t, width / 2, height / 2 + (i * 1.5 + 1) * EM);
+			text(this._lines[i].t, width / 2, (height - boxHeight) / 2 + (i * 1.5 + 2) * EM);
 		}
 
 		rectMode(CORNER);
