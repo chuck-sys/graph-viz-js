@@ -27,7 +27,10 @@ var makeEdges = {
 	targetNode: null
 }
 
-var selected = null;
+var selected = {
+	nodes: [],
+	box: null
+};
 var dialogBox = null;
 
 var m_tutorialctl = new TutorialController(
@@ -158,7 +161,7 @@ function draw() {
 
 	// Display the infobox on top of everything else, at the top-left hand
 	// corner of the screen, no scaling.
-	if (selected !== null) {
+	if (selected.nodes.length === 1) {
 		selected.box.draw(view);
 	}
 
@@ -171,7 +174,7 @@ function draw() {
 }
 
 function doubleClicked() {
-	if (selected !== null && dialogBox === null) {
+	if (selected.nodes.length === 1 && dialogBox === null) {
 		// On the off chance that we clicked on something important, we need to
 		// populate the dialogBox variable with an actual dialog box.
 		selected.box.handleDblClick(mouseX, mouseY, (box) => {
@@ -190,7 +193,7 @@ function keyPressed() {
 		return;
 	}
 
-	if (selected !== null) {
+	if (selected.nodes.length === 1) {
 		if (selected.box.handleInput(keyCode)) {
 			return;
 		}
@@ -204,7 +207,8 @@ function keyPressed() {
 		let [mX, mY] = screenToWorldCoords(mouseX, mouseY, view);
 		n = new Node(m_engine.world, mX, mY);
 		// ... and then select that node
-		selectNode(n);
+		deselectAllNodes();
+		toggleNode(n);
 		m_nodes.push(n);
 
 		// If we have added more than 15 nodes on screen at once, trigger the
@@ -213,27 +217,33 @@ function keyPressed() {
 		if (m_nodes.length >= 15) {
 			m_tutorialctl.trigger('scrolling');
 		}
-	} else if (keyCode === DELETE && selected !== null) {
-		// If we are selecting a node, delete it
-		World.remove(m_engine.world, selected.node.m_body);		// Remove from physics engine
-		m_nodes.splice(m_nodes.indexOf(selected.node), 1);		// Remove from array (a ref)
-		// Also delete all edges themselves that are connected
+	} else if (keyCode === DELETE) {
+		// If we are selecting nodes, delete them
 		let yeet = false;
-		for (let i = 0; i < m_edges.length; ++i) {
-			if (selected.node.m_body === m_edges[i].m_b1 || selected.node.m_body === m_edges[i].m_b2) {
-				World.remove(m_engine.world, m_edges[i].m_constraint);
-				m_edges.splice(i, 1);
-				--i;
-				yeet = true;
+		for (const n of selected.nodes) {
+			World.remove(m_engine.world, n.m_body);
+			m_nodes.splice(m_nodes.indexOf(n), 1);
+
+			for (let i = 0; i < m_edges.length; ++i) {
+				if (n.m_body === m_edges[i].m_b1 || n.m_body === m_edges[i].m_b2) {
+					World.remove(m_engine.world, m_edges[i].m_constraint);
+					m_edges.splice(i, 1);
+					--i;
+					yeet = true;
+				}
 			}
 		}
-		deselectNode();											// Deselect it, thus removing it entirely
+
+		deselectAllNodes();
 
 		// If there is an edge attached to this node that we have deleted,
 		// trigger the edge deletion tutorial
 		if (yeet) {
 			m_tutorialctl.trigger('delete_edge');
 		}
+	} else if (keyCode === ESCAPE) {
+		// Deselect all nodes
+		deselectAllNodes();
 	}
 }
 
@@ -273,10 +283,15 @@ function mouseReleased() {
 	} else {
 		// Click on a node to select it
 		let n = isCoordCollide(mouseX, mouseY);
-		if (n !== null) {
-			selectNode(n);
-		} else if (selected !== null && !selected.box.isHit(mouseX, mouseY)) {
-			deselectNode();
+		if (n !== null && keyIsDown(CONTROL)) {
+			// If we are holding down control, toggle and don't touch the
+			// others
+			toggleNode(n);
+		} else if (n !== null && !keyIsDown(CONTROL)) {
+			// If we aren't holding down control, deselect everything and
+			// select that one
+			deselectAllNodes();
+			toggleNode(n);
 		}
 	}
 }
@@ -347,17 +362,30 @@ function tick(delta) {
 	Engine.update(m_engine, delta);
 }
 
-function deselectNode() {
-	if (selected !== null) {
-		selected.node.deselect();
-		selected = null;
+function deselectAllNodes() {
+	for (const n of selected.nodes) {
+		n.deselect();
 	}
+
+	selected.nodes = [];
+	selected.box = null;
 }
 
-function selectNode(n) {
-	deselectNode();
-	selected = {node: n, box: new NodeInfobox(n)};
-	n.select();
+function toggleNode(n) {
+	if (selected.nodes.includes(n)) {
+		// If node is already selected, deselect it
+		n.deselect();
+		selected.nodes.splice(selected.nodes.indexOf(n), 1);
+	} else {
+		// If nodes is not selected already, select it
+		n.select();
+		selected.nodes.push(n);
+	}
+
+	// If needed, we use an infobox
+	if (selected.nodes.length === 1) {
+		selected.box = new NodeInfobox(selected.nodes[0]);
+	}
 }
 
 /**
