@@ -319,7 +319,7 @@ function mouseReleased() {
 
 function mouseDragged() {
 	if (dialogBox !== null) {
-		return;
+		return false;
 	}
 
 	if (g_state === 'normal') {
