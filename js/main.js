@@ -205,7 +205,7 @@ function keyPressed() {
 		}
 	}
 
-	if (keyCode === 65 && g_selected.state === 'normal') {
+	if (keyCode === 65 && !keyIsDown(CONTROL) && g_selected.state === 'normal') {
 		// Check to see if we are clicking outside of the playing area
 		if (mouseX > width || mouseY > height) return;
 
@@ -222,6 +222,12 @@ function keyPressed() {
 		// to do that).
 		if (g_nodes.length >= 15) {
 			g_tutorialctl.trigger('scrolling');
+		}
+	} else if (keyCode === 65 && keyIsDown(CONTROL)) {
+		// CTRL-A is select all
+		g_selected.nodes = g_nodes;
+		for (const n of g_nodes) {
+			n.select();
 		}
 	} else if (keyCode === DELETE && g_selected.state === 'normal') {
 		// If we are selecting nodes, delete them
@@ -255,7 +261,11 @@ function keyPressed() {
 		// for the callback. This could be anything, but provides a way for
 		// other features to hook onto this existing selection system.
 		g_selected.cb(g_selected.nodes);
+	} else {
+		return true;
 	}
+
+	return false;
 }
 
 function mouseReleased() {
