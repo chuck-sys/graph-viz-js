@@ -90,6 +90,26 @@ class NodeInfobox {
 			}
 
 			return true;
+		} else if (key === 84 && this.isHit(mouseX, mouseY)) {
+			// T for templating mode
+			g_selected.state = 'select';
+			g_selected.cb = nodes => {
+				g_selected.state = 'normal';
+
+				for (const n of nodes) {
+					for (const k of Object.keys(this.node.otherAttrs())) {
+						if (!n.m_data.hasOwnProperty(k)) {
+							n.m_data[k] = '';
+						}
+					}
+				}
+
+				deselectAllNodes();
+				toggleNode(this.node);
+
+				// TODO: After adding status bar, add notification to user for
+				// what has happened.
+			};
 		}
 
 		return false;
