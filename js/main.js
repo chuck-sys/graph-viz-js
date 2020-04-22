@@ -7,6 +7,10 @@ var running = true;
  * - "normal" for normal operations
  * - "dragging" for moving the view
  * - "makeEdges" for connecting nodes with edges
+ * - "select" for selecting things, which is a special mode that you exit from
+ *   by pressing the ENTER key, which is different from selecting things
+ *   normally because we want to use it for when features require a select
+ *   callback.
  */
 var m_state = "normal";
 var m_engine;
@@ -29,7 +33,8 @@ var makeEdges = {
 
 var selected = {
 	nodes: [],
-	box: null
+	box: null,
+	cb: nodes => m_state = "normal"
 };
 var dialogBox = null;
 
@@ -244,6 +249,11 @@ function keyPressed() {
 	} else if (keyCode === ESCAPE) {
 		// Deselect all nodes
 		deselectAllNodes();
+	} else if (m_state === 'select' && keyCode === ENTER) {
+		// When pressing ENTER key in select mode, we return to whatever we got
+		// for the callback. This could be anything, but provides a way for
+		// other features to hook onto this existing selection system.
+		selected.cb(selected.nodes);
 	}
 }
 
