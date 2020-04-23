@@ -103,6 +103,8 @@ function setup() {
 		World.clear(g_engine.world, false, true);
 		g_nodes = [];
 		g_edges = [];
+
+		deselectAllNodes();
 	});
 
 	// Setup autosave
