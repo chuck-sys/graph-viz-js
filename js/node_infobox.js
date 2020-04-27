@@ -107,9 +107,17 @@ class NodeInfobox {
 				deselectAllNodes();
 				toggleNode(this.node);
 
-				// TODO: After adding status bar, add notification to user for
-				// what has happened.
+				g_statbar.setStatus(`Applied template to ${nodes.length} nodes.`);
 			};
+			g_selected.cancelcb = () => {
+				g_selected.state = 'normal';
+				deselectAllNodes();
+				toggleNode(this.node);
+
+				g_statbar.setStatus('Did not apply template.');
+			}
+
+			g_statbar.setStatus('Select nodes to apply the template. Press ENTER to apply and ESCAPE to cancel.');
 		}
 
 		return false;

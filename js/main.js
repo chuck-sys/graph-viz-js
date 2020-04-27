@@ -16,7 +16,7 @@ var g_state = "normal";
 var g_engine;
 var g_nodes = [];
 var g_edges = [];
-var g_statbar = new StatusBar(s => g_state = s);
+var g_statbar = new StatusBar(s => g_state = s, g_state);
 
 var view = {
 	x: 0, y: 0, s: 1
@@ -36,7 +36,8 @@ var g_selected = {
 	state: 'normal',
 	nodes: [],
 	box: null,
-	cb: nodes => {}
+	cb: nodes => {},
+	cancelcb: () => {}
 };
 var dialogBox = null;
 
@@ -179,6 +180,9 @@ function draw() {
 		dialogBox.draw();
 	}
 
+	// Display status bar
+	g_statbar.draw();
+
 	tick(deltaTime);
 }
 
@@ -256,7 +260,7 @@ function keyPressed() {
 		if (yeet) {
 			g_tutorialctl.trigger('delete_edge');
 		}
-	} else if (keyCode === ESCAPE) {
+	} else if (g_selected.state === 'normal' && keyCode === ESCAPE) {
 		// Deselect all nodes
 		deselectAllNodes();
 	} else if (g_selected.state === 'select' && keyCode === ENTER) {
@@ -264,6 +268,11 @@ function keyPressed() {
 		// for the callback. This could be anything, but provides a way for
 		// other features to hook onto this existing selection system.
 		g_selected.cb(g_selected.nodes);
+	} else if (g_selected.state === 'select' && keyCode === ESCAPE) {
+		// When pressing the ESCAPE key in select mode, we don't change
+		// anything and don't do the callback and return everything as it was
+		// before. Using yet another callback.
+		g_selected.cancelcb();
 	} else {
 		return true;
 	}
