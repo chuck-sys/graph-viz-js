@@ -16,6 +16,7 @@ var g_state = "normal";
 var g_engine;
 var g_nodes = [];
 var g_edges = [];
+var g_statbar = new StatusBar(s => g_state = s);
 
 var view = {
 	x: 0, y: 0, s: 1
@@ -276,9 +277,9 @@ function mouseReleased() {
 	}
 
 	if (g_state === 'dragging') {
-		g_state = 'normal';
+		g_statbar.setState('normal');
 	} else if (g_state === 'makeEdges') {
-		g_state = 'normal';
+		g_statbar.setState('normal');
 		if (makeEdges.targetNode === null || makeEdges.anchorNode === null || makeEdges.anchorNode === makeEdges.targetNode) {
 			// We haven't connected the nodes or we are connecting our own
 			// nodes so we don't do anything and exit early
@@ -330,13 +331,13 @@ function mouseDragged() {
 		// If not we are simply dragging the view around
 		makeEdges.anchorNode = isCoordCollide(mouseX, mouseY);
 		if (makeEdges.anchorNode === null) {
-			g_state = 'dragging';
+			g_statbar.setState('dragging');
 			dragging.x = mouseX;
 			dragging.y = mouseY;
 			dragging.vx = view.x;
 			dragging.vy = view.y;
 		} else if (g_selected.state === 'normal') {
-			g_state = 'makeEdges';
+			g_statbar.setState('makeEdges');
 		}
 	} else if (g_state === 'makeEdges') {
 		makeEdges.targetNode = isCoordCollide(mouseX, mouseY);
