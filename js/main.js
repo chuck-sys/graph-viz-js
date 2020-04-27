@@ -307,11 +307,11 @@ function mouseReleased() {
 	} else {
 		// Click on a node to select it
 		let n = isCoordCollide(mouseX, mouseY);
-		if (n !== null && keyIsDown(CONTROL)) {
+		if (n !== null && (keyIsDown(CONTROL) || keyIsDown(SHIFT))) {
 			// If we are holding down control, toggle and don't touch the
 			// others
 			toggleNode(n);
-		} else if (n !== null && !keyIsDown(CONTROL)) {
+		} else if (n !== null && !(keyIsDown(CONTROL) || keyIsDown(SHIFT))) {
 			// If we aren't holding down control, deselect everything and
 			// select that one
 			deselectAllNodes();
