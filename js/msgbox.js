@@ -29,6 +29,10 @@ class MsgBox {
 			text(this._lines[i].t, width / 2, (height - boxHeight) / 2 + (i * 1.5 + 2) * EM);
 		}
 
+		textAlign(RIGHT, BOTTOM);
+		fill(100);
+		text('Press any key to continue', (width + this._maxWidthLine + 2 * EM) / 2, (height - boxHeight) / 2 + (this._lines.length * 1.5 + 2) * EM);
+
 		rectMode(CORNER);
 	}
 
