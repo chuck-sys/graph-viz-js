@@ -7,6 +7,7 @@ class MsgBox {
 	constructor(lines, okcb) {
 		this._lines = this.getTextWidths(lines);
 		this._okcb = okcb;
+		this.iframes = 1000;
 	}
 
 	draw() {
@@ -29,16 +30,28 @@ class MsgBox {
 			text(this._lines[i].t, width / 2, (height - boxHeight) / 2 + (i * 1.5 + 2) * EM);
 		}
 
-		textAlign(RIGHT, BOTTOM);
-		fill(100);
-		text('Press any key to continue', (width + this._maxWidthLine + 2 * EM) / 2, (height - boxHeight) / 2 + (this._lines.length * 1.5 + 2) * EM);
+		if (this.iframes <= 0) {
+			textAlign(RIGHT, BOTTOM);
+			fill(100);
+			text('Press any key to continue', (width + this._maxWidthLine + 2 * EM) / 2, (height - boxHeight) / 2 + (this._lines.length * 1.5 + 2) * EM);
+		}
 
 		rectMode(CORNER);
 	}
 
 	handleInput(key) {
-		// We recognize all keys
-		this._okcb();
+		// We recognize all keys, if the thing isn't immune
+		if (this.iframes <= 0) {
+			this._okcb();
+		}
+	}
+
+	tick(delta) {
+		// This thing has a set amount of time where it is immune to keyboard
+		// inputs
+		if (this.iframes > 0) {
+			this.iframes -= delta;
+		}
 	}
 
 	/**

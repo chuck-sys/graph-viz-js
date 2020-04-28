@@ -12,6 +12,12 @@ const TUTORIAL = {
 	'delete_edge': [
 		'Another way to delete an edge is similar to how you create them.',
 		'Just click and drag a node with an existing edge to delete it!'
+	],
+	'apply_template': [
+		'It looks like you are trying to add the same attributes of a node to multiple nodes.',
+		'You can do it faster by selecting the node and pressing "T" to apply all the node\'s attributes.',
+		'After pressing "T", select the nodes you want the attributes to apply to and it will',
+		'automatically add those attributes to the nodes you selected!'
 	]
 };
 
@@ -47,7 +53,14 @@ class TutorialController {
 			return;
 		}
 
-		this._install(new MsgBox(TUTORIAL[name], this._msgokcb));
+		// It's possible that dialog boxes are triggered within other dialog
+		// boxes. There is no way of layering them on top of each other, but we
+		// can set it up so that the dialog boxes install after a delay,
+		// asynchronously, so that we don't delete the dialog box immediately
+		// after an install.
+		setTimeout(() => {
+			this._install(new MsgBox(TUTORIAL[name], this._msgokcb));
+		}, 500);
 
 		this.bypass(name);
 	}
@@ -58,8 +71,10 @@ class TutorialController {
 	 * before a tutorial has begun.
 	 */
 	bypass(name) {
-		this._d.set(name, true);
-		this.saveState();
+		if (!this.hasBeenTriggered(name)) {
+			this._d.set(name, true);
+			this.saveState();
+		}
 	}
 
 	/**

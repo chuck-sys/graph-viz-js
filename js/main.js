@@ -296,10 +296,8 @@ function mouseReleased() {
 			World.remove(g_engine.world, e.m_constraint);
 			g_edges.splice(g_edges.indexOf(e), 1);
 
-			// Bypass the edge deletion tutorial if necessary
-			if (!g_tutorialctl.hasBeenTriggered('delete_edge')) {
-				g_tutorialctl.bypass('delete_edge');
-			}
+			// Bypass the edge deletion tutorial
+			g_tutorialctl.bypass('delete_edge');
 		} else {
 			// Make the edge!
 			g_edges.push(new Edge(g_engine.world, makeEdges.anchorNode, makeEdges.targetNode));
@@ -376,16 +374,17 @@ function mouseWheel(evt) {
 	if (mouseX > width || mouseY > height) return;
 	view.s += evt.delta / 100;
 
-	// If we haven't bypassed it already, bypass
-	if (!g_tutorialctl.hasBeenTriggered('scrolling')) {
-		g_tutorialctl.bypass('scrolling');
-	}
+	g_tutorialctl.bypass('scrolling');
 
 	return false;
 }
 
 function tick(delta) {
 	Engine.update(g_engine, delta);
+
+	if (dialogBox !== null) {
+		dialogBox.tick(delta);
+	}
 }
 
 function deselectAllNodes() {

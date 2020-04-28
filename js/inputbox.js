@@ -35,6 +35,12 @@ class InputBox {
 	}
 
 	/**
+	 * Dud function
+	 */
+	tick(delta) {
+	}
+
+	/**
 	 * Called every frame you obtain input. Takes the events themselves as
 	 * input. We use this to see where the user clicks (if they focus on the
 	 * textbox or not). The enter key is pressed to submit everything, the

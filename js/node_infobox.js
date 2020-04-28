@@ -2,6 +2,8 @@ const INFOBOX_WIDTH = 22 * EM;
 const INFOBOX_HEIGHT = 10.5 * EM;
 const INFOBOX_ALPHA = 200;
 
+var g_lastAttr = null;
+
 /**
  * This element is used for displaying only and does not need any physics
  * attached. It only needs the node it is attached on.
@@ -92,6 +94,8 @@ class NodeInfobox {
 			return true;
 		} else if (key === 84 && this.isHit(mouseX, mouseY)) {
 			// T for templating mode
+			g_tutorialctl.bypass('apply_template');
+
 			g_selected.state = 'select';
 			g_selected.cb = nodes => {
 				g_selected.state = 'normal';
@@ -147,7 +151,15 @@ class NodeInfobox {
 				}
 			} else {
 				// Else, we add it as a new attribute
-				box = new InputBox("Add new key", '???', (s) => this.node.m_data[s] = '', fn_cancel);
+				box = new InputBox("Add new key", '???', (s) => {
+					this.node.m_data[s] = '';
+
+					if (g_lastAttr === s) {
+						g_tutorialctl.trigger('apply_template');
+					}
+
+					g_lastAttr = s;
+				}, fn_cancel);
 			}
 		}
 		fn_inputBox(box);
