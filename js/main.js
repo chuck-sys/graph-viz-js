@@ -83,21 +83,14 @@ function setup() {
 		const obj = serializeWorld(g_nodes, g_edges, view);
 		const now = new Date(Date.now());
 		localStorage.setItem('data', JSON.stringify(obj));
-
-		saveToBrowser.innerHTML = 'Saved!';
-		saveToBrowser.classList.add('flash');
-		autoSaveLbl.innerHTML = 'Auto-Save (last saved ' + now.toTimeString() + ')';
-
-		setTimeout(() => {
-			saveToBrowser.innerHTML = 'Save to browser (no download)';
-			saveToBrowser.classList.remove('flash');
-		}, 2000);
+		g_statbar.setStatus('Saved!');
 	});
 
 	loadFromFile.addEventListener('change', evt => {
 		const file = evt.target.files[0];
 		readFile(file, text => {
 			[g_nodes, g_edges, view] = deserializeFile(g_engine.world, JSON.parse(text));
+			g_statbar.setStatus('Loaded from file!');
 		});
 	});
 
